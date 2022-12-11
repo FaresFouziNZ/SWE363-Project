@@ -43,12 +43,16 @@ class CompetitionCard extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10),
             child: Column(
               // crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Date: 2021-05-05', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('Time: 12:00', style: TextStyle(fontWeight: FontWeight.bold)),
+              children: [
                 Text(
-                  'Location: somewhere',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                    'Date: ${competition.startDate.toDate().toIso8601String().substring(0, competition.startDate.toDate().toIso8601String().indexOf('T'))}',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                    'End date: ${competition.endDate.toDate().toIso8601String().substring(0, competition.endDate.toDate().toIso8601String().indexOf('T'))}',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  'Location: ${competition.location}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),

@@ -125,7 +125,7 @@ class CompetitionDetailsPage extends StatelessWidget {
                               : 10,
                         ),
                         Text(
-                            'Start date: asdDasSda \nEnd date: asdDasSda \nLocation: asdDasSda ${MediaQuery.of(context).size.width}',
+                            'Start date: ${competition.startDate.toDate().toIso8601String().substring(0, competition.startDate.toDate().toIso8601String().indexOf('T'))}\nEnd date: ${competition.endDate.toDate().toIso8601String().substring(0, competition.endDate.toDate().toIso8601String().indexOf('T'))}\nLocation: ${competition.location} ${MediaQuery.of(context).size.width}',
                             style: const TextStyle(fontSize: 16, color: Colors.black)),
                         const SizedBox(
                           height: 20,
