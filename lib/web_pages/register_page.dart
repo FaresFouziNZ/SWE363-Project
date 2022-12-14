@@ -50,7 +50,8 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/asd.png"),
+            image: NetworkImage(
+                'https://firebasestorage.googleapis.com/v0/b/spc-watch-23a53.appspot.com/o/priscilla-du-preez-XkKCui44iM0-unsplash.jpg?alt=media&token=2db3a701-3908-40f8-8eaa-dff41576609b'),
             fit: BoxFit.cover,
           ),
         ),

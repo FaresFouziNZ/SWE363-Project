@@ -5,8 +5,9 @@ import 'package:swe363project/web_pages/create_competition_page.dart';
 import '../web_pages/competition_details_page.dart';
 
 class CompetitionCard extends StatelessWidget {
-  const CompetitionCard({Key key, this.competition, this.isOwner}) : super(key: key);
+  const CompetitionCard({Key key, this.competition, this.isOwner, this.isRegistered}) : super(key: key);
   final bool isOwner;
+  final bool isRegistered;
   final Competition competition;
 
   @override
@@ -78,6 +79,7 @@ class CompetitionCard extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => CompetitionDetailsPage(
                         competition: competition,
+                        isRegistered: isRegistered,
                       ),
                     ),
                   );

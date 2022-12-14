@@ -43,11 +43,13 @@ class DatabaseService {
     });
   }
 
-  Future getAllCompetitions() async {
+  Future getAllCompetitions(String id) async {
     List<Competition> competitions = [];
     await collections.competitions.get().then((value) {
       for (var element in value.docs) {
-        competitions.add(Competition.fromMap(element.data()));
+        var competition = Competition.fromMap(element.data());
+        competition.registeredCompetitorsIDs ??= [];
+        if (!competition.registeredCompetitorsIDs.contains(id)) competitions.add(competition);
       }
     });
     return competitions;
@@ -55,7 +57,17 @@ class DatabaseService {
 
   Future getOwnedCompetitions(String id) async {
     List<Competition> competitions = [];
-    await collections.competitions.where('oid', isEqualTo: id).get().then((value) {
+    await collections.competitions.where('oid', isEqualTo: id).where('oid', isNull: false).get().then((value) {
+      for (var element in value.docs) {
+        competitions.add(Competition.fromMap(element.data()));
+      }
+    });
+    return competitions;
+  }
+
+  Future getMyCompetitions(String id) async {
+    List<Competition> competitions = [];
+    await collections.competitions.where('registeredCompetitorsIDs', arrayContains: id).get().then((value) {
       for (var element in value.docs) {
         competitions.add(Competition.fromMap(element.data()));
       }

@@ -2,18 +2,19 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:swe363project/cloud_functions/auth_service.dart';
-import 'package:swe363project/cloud_functions/database_service.dart';
-import 'package:swe363project/model/competition.dart';
-import 'package:swe363project/model/local_user.dart';
-import 'package:swe363project/web_pages/create_competition_page.dart';
-import 'package:swe363project/web_pages/login_page.dart';
-import 'package:swe363project/web_pages/my_competiton_page.dart';
-import 'package:swe363project/web_pages/owned_competition_page.dart';
-import 'package:swe363project/widgets/competition_card.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key key}) : super(key: key);
+import '../cloud_functions/auth_service.dart';
+import '../cloud_functions/database_service.dart';
+import '../model/competition.dart';
+import '../model/local_user.dart';
+import '../widgets/competition_card.dart';
+import 'create_competition_page.dart';
+import 'home_page.dart';
+import 'login_page.dart';
+import 'owned_competition_page.dart';
+
+class MyCompetitionPage extends StatelessWidget {
+  const MyCompetitionPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +28,22 @@ class HomePage extends StatelessWidget {
           visible: user?.uid != null,
           child: Row(
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.04,
-                color: const Color(0xFF477281),
-                child: Icon(
-                  Icons.home_filled,
-                  size: MediaQuery.of(context).size.width * 0.03,
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomePage(),
+                    ),
+                  );
+                },
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.04,
+                  // color: const Color(0xFF477281),
+                  child: Icon(
+                    Icons.home_filled,
+                    size: MediaQuery.of(context).size.width * 0.03,
+                  ),
                 ),
               ),
               Visibility(
@@ -75,20 +86,26 @@ class HomePage extends StatelessWidget {
                 visible: true,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 25.0),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MyCompetitionPage(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'My Competitions',
-                      style: TextStyle(fontSize: 18, color: Colors.white
-                          // fontWeight: FontWeight.bold,
-                          ),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.06,
+                    color: const Color(0xFF477281),
+                    child: TextButton(
+                      // style: TextButton.styleFrom(backgroundColor: const ),
+                      onPressed: () {
+                        if (user?.uid == null) {}
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const CreateCompetitionPage(isEdit: false),
+                        //   ),
+                        // );
+                      },
+                      child: const Text(
+                        'My Competitions',
+                        style: TextStyle(fontSize: 18, color: Colors.white
+                            // fontWeight: FontWeight.bold,
+                            ),
+                      ),
                     ),
                   ),
                 ),
@@ -194,7 +211,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   FutureBuilder(
-                      future: DatabaseService().getAllCompetitions(user?.uid ?? ""),
+                      future: DatabaseService().getMyCompetitions(user.uid),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState != ConnectionState.done) {
                           return const Center(
@@ -207,7 +224,7 @@ class HomePage extends StatelessWidget {
                                 children: list
                                     .map((e) => Padding(
                                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                                          child: CompetitionCard(competition: e, isOwner: false, isRegistered: false),
+                                          child: CompetitionCard(competition: e, isOwner: false, isRegistered: true),
                                         ))
                                     .toList()),
                           );

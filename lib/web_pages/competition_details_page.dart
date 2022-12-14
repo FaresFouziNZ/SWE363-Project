@@ -12,8 +12,9 @@ import 'package:swe363project/model/local_user.dart';
 import 'home_page.dart';
 
 class CompetitionDetailsPage extends StatelessWidget {
-  const CompetitionDetailsPage({Key key, this.competition}) : super(key: key);
+  const CompetitionDetailsPage({Key key, this.competition, this.isRegistered}) : super(key: key);
   final Competition competition;
+  final bool isRegistered;
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<LocalUser>(context);
@@ -145,20 +146,42 @@ class CompetitionDetailsPage extends StatelessWidget {
                               },
                           )
                         ])),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            height: MediaQuery.of(context).size.width * 0.03,
-                            child: ElevatedButton(
-                                onPressed: () async {
-                                  if (user?.uid == null) {
+                        Visibility(
+                          visible: !isRegistered,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.1,
+                              height: MediaQuery.of(context).size.width * 0.03,
+                              child: ElevatedButton(
+                                  onPressed: () async {
+                                    if (user?.uid == null) {
+                                      await showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                                title: const Text('Registration'),
+                                                content: const Text(
+                                                    'You need to be logged in to register for a competition'),
+                                                actions: [
+                                                  TextButton(
+                                                      style: TextButton.styleFrom(
+                                                        foregroundColor: Colors.white,
+                                                        backgroundColor: Colors.red,
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: const Text('Cancel')),
+                                                ],
+                                              ));
+                                      return;
+                                    }
                                     await showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                              title: const Text('Registration'),
+                                              title: const Text('Registration confirmation'),
                                               content:
-                                                  const Text('You need to be logged in to register for a competition'),
+                                                  const Text('Are you sure you want to register for this competition?'),
                                               actions: [
                                                 TextButton(
                                                     style: TextButton.styleFrom(
@@ -169,72 +192,53 @@ class CompetitionDetailsPage extends StatelessWidget {
                                                       Navigator.of(context).pop();
                                                     },
                                                     child: const Text('Cancel')),
+                                                TextButton(
+                                                    onPressed: () async {
+                                                      await DatabaseService()
+                                                          .registerForCompetition(competition, user.uid);
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) => AlertDialog(
+                                                                title: const Text('Registration'),
+                                                                content: const Text(
+                                                                    'You have successfully registered for this competition'),
+                                                                actions: [
+                                                                  TextButton(
+                                                                      style: TextButton.styleFrom(
+                                                                        foregroundColor: Colors.white,
+                                                                        backgroundColor: Colors.red,
+                                                                      ),
+                                                                      onPressed: () {
+                                                                        Navigator.of(context).pop();
+                                                                        Navigator.pushReplacement(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                            builder: (context) => const HomePage(),
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                      child: const Text('Confirm'))
+                                                                ],
+                                                              ));
+                                                    },
+                                                    child: const Text('Confirm')),
                                               ],
                                             ));
-                                    return;
-                                  }
-                                  await showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                            title: const Text('Registration confirmation'),
-                                            content:
-                                                const Text('Are you sure you want to register for this competition?'),
-                                            actions: [
-                                              TextButton(
-                                                  style: TextButton.styleFrom(
-                                                    foregroundColor: Colors.white,
-                                                    backgroundColor: Colors.red,
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text('Cancel')),
-                                              TextButton(
-                                                  onPressed: () async {
-                                                    await DatabaseService()
-                                                        .registerForCompetition(competition, user.uid);
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) => AlertDialog(
-                                                              title: const Text('Registration'),
-                                                              content: const Text(
-                                                                  'You have successfully registered for this competition'),
-                                                              actions: [
-                                                                TextButton(
-                                                                    style: TextButton.styleFrom(
-                                                                      foregroundColor: Colors.white,
-                                                                      backgroundColor: Colors.red,
-                                                                    ),
-                                                                    onPressed: () {
-                                                                      Navigator.of(context).pop();
-                                                                      Navigator.pushReplacement(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                          builder: (context) => const HomePage(),
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                                    child: const Text('Confirm'))
-                                                              ],
-                                                            ));
-                                                  },
-                                                  child: const Text('Confirm')),
-                                            ],
-                                          ));
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF5C9CBF),
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16.0),
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF5C9CBF),
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                    ),
                                   ),
-                                ),
-                                child: const Text(
-                                  'Register',
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                  ),
-                                )),
+                                  child: const Text(
+                                    'Register',
+                                    style: TextStyle(
+                                      fontSize: 28,
+                                    ),
+                                  )),
+                            ),
                           ),
                         )
                       ],

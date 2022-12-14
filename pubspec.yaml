@@ -41,6 +41,7 @@ dependencies:
   firebase_storage: ^11.0.6
   cloud_firestore: ^4.1.0
   provider: ^6.0.4
+  image_picker_web: ^3.0.0+1
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,7 @@ flutter:
     - assets/images/asda.jpg
     - assets/images/asd.jpg
     - assets/images/love.png
+    - assets/images/empty.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

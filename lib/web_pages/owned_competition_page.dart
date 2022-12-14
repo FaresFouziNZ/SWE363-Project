@@ -9,7 +9,9 @@ import '../model/competition.dart';
 import '../model/local_user.dart';
 import '../widgets/competition_card.dart';
 import 'create_competition_page.dart';
+import 'home_page.dart';
 import 'login_page.dart';
+import 'my_competiton_page.dart';
 
 class OwnedCompetitionPage extends StatelessWidget {
   const OwnedCompetitionPage({Key key}) : super(key: key);
@@ -24,12 +26,22 @@ class OwnedCompetitionPage extends StatelessWidget {
         backgroundColor: const Color(0xFF5C9CBF),
         title: Row(
           children: [
-            Container(
-              width: MediaQuery.of(context).size.width * 0.04,
-              color: const Color(0xFF477281),
-              child: Icon(
-                Icons.home_filled,
-                size: MediaQuery.of(context).size.width * 0.03,
+            GestureDetector(
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
+                  ),
+                );
+              },
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.04,
+                // color: const Color(0xFF477281),
+                child: Icon(
+                  Icons.home_filled,
+                  size: MediaQuery.of(context).size.width * 0.03,
+                ),
               ),
             ),
             Visibility(
@@ -73,18 +85,46 @@ class OwnedCompetitionPage extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 25.0),
                 child: TextButton(
                   onPressed: () {
-                    // Navigator.pushReplacement(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const CreateCompetitionPage(isEdit: false),
-                    //   ),
-                    // );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyCompetitionPage(),
+                      ),
+                    );
                   },
                   child: const Text(
                     'My Competitions',
                     style: TextStyle(fontSize: 18, color: Colors.white
                         // fontWeight: FontWeight.bold,
                         ),
+                  ),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: true,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 25.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  color: const Color(0xFF477281),
+                  child: TextButton(
+                    // style: TextButton.styleFrom(backgroundColor: const ),
+                    onPressed: () {
+                      if (user?.uid == null) {}
+                      // Navigator.pushReplacement(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const CreateCompetitionPage(isEdit: false),
+                      //   ),
+                      // );
+                    },
+                    child: const Text(
+                      'Owned Competitions',
+                      style: TextStyle(fontSize: 18, color: Colors.white
+                          // fontWeight: FontWeight.bold,
+                          ),
+                    ),
                   ),
                 ),
               ),
@@ -140,7 +180,8 @@ class OwnedCompetitionPage extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/asd.jpg'),
+            image: NetworkImage(
+                'https://firebasestorage.googleapis.com/v0/b/spc-watch-23a53.appspot.com/o/asd.jpg?alt=media&token=10133f7c-fdea-4c6a-ba8b-b1ca797dc212'),
             fit: BoxFit.cover,
           ),
         ),
@@ -176,6 +217,7 @@ class OwnedCompetitionPage extends StatelessWidget {
                                           child: CompetitionCard(
                                             competition: e,
                                             isOwner: true,
+                                            isRegistered: false,
                                           ),
                                         ))
                                     .toList()),
